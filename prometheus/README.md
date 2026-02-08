@@ -22,7 +22,7 @@ Globalement, Prometheus regroupe :
 - une API Rest pour exécuter les requêtes et gérer la plateforme.
 - une interface graphique pour visualiser les données.
 
-Il est recommandé d'utiliser [**Grafana**](https://grafana.com/grafana/) pour l'affichage des données. 
+Il est recommandé d'utiliser [**Grafana**](https://grafana.com/grafana/) pour l'affichage des données.
 L'interface minimaliste de Prometheus doit être consacrée uniquement aux tests de validité des requêtes PromQL.
 
 ## Types de métriques
@@ -91,10 +91,9 @@ Par exemple, le quantile 0,5 également appelé médiane permet de séparer une 
 
 ![Médiane](./img/mediane.png)
 
-
 ## Format des métriques
 
-Les applications doivent exposer leurs métriques par le biais d'un service HTTP de type GET.<br> 
+Les applications doivent exposer leurs métriques par le biais d'un service HTTP de type GET.<br>
 Ce service retourne l'intégralité des métriques dans un format texte compréhensible par Prometheus.
 
 <b>Compteur</b>
@@ -113,13 +112,13 @@ La première jauge `process_resident_memory_size` indique la taille mémoire occ
 
 On peut également se servir d'une jauge pour définir une constante, c'est le cas de `process_start_time_seconds` qui indique la date de démarrage du processus. Cette donnée n'évolue pas tant que l'application ne redémarre pas.
 
-Une métrique doit obligatoirement avoir un nom. Elle peut en revanche ne pas avoir de libellé, c'est le cas pour ces deux jauges. 
+Une métrique doit obligatoirement avoir un nom. Elle peut en revanche ne pas avoir de libellé, c'est le cas pour ces deux jauges.
 
 <b>Histogramme</b>
 
 ![Histogramme format](./img/histogramme_format.png)
 
-Un histogramme est composé de plusieurs séries temporelles. 
+Un histogramme est composé de plusieurs séries temporelles.
 
 Premièrement, on a les séries correspondantes aux différentes catégories de l'histogramme. Leur nom se termine par `_bucket`. Chacune de ces séries contient obligatoirement le libellé `le` (lower or equal).<br>
 La première catégorie indique que 309 requêtes ont eu une durée d'exécution inférieure ou égale 0,1s.<br>
@@ -151,9 +150,9 @@ Pour créer et exposer les métriques d'une application, on peut :
 
 Un exporter permet d'observer un système existant sans avoir à ajouter le moindre code.
 
-* [`Node exporter`](https://github.com/prometheus/node_exporter) expose les métriques d'un système Linux.
-* [`JMX exporter`](https://github.com/prometheus/jmx_exporter) expose les métriques d'une application Java en se basant sur les données disponibles via JMX.
-* [`PostgreSQL exporter`](https://github.com/prometheus-community/postgres_exporter) expose les métriques d'une base de données PostgreSQL.
+- [`Node exporter`](https://github.com/prometheus/node_exporter) expose les métriques d'un système Linux.
+- [`JMX exporter`](https://github.com/prometheus/jmx_exporter) expose les métriques d'une application Java en se basant sur les données disponibles via JMX.
+- [`PostgreSQL exporter`](https://github.com/prometheus-community/postgres_exporter) expose les métriques d'une base de données PostgreSQL.
 
 Le serveur Prometheus expose également des métriques, il peut donc s'observer lui-même.
 
@@ -181,10 +180,11 @@ scrape_configs:
 `job_name` représente le nom de l'application. Le tableau `targets` liste les instances sur laquelle l'application est déployée.
 
 Sur cet exemple, Prometheus collectera toutes les 15 secondes :
-- ses propres métriques => `http://localhost:9090/metrics` 
+
+- ses propres métriques => `http://localhost:9090/metrics`
 - les métriques d'un serveur linux => `http://localhost:9100/metrics`
 
-Pour une utilisation plus poussée, il sera préférable d'utiliser la découverte de service pour récupérer la liste des instances dynamiquement. 
+Pour une utilisation plus poussée, il sera préférable d'utiliser la découverte de service pour récupérer la liste des instances dynamiquement.
 
 Une fois les données récupérées, Prometheus les enregistre dans sa base sous forme de séries temporelles.<br>
 
@@ -222,7 +222,7 @@ Le résultat contient une seule valeur par série. C'est la valeur la plus réce
 
 **GET /api/query?query=prometheus_http_requests_total&time=1682358304.676**
 
-*La date courante est utilisée si le paramètre time n'est pas fourni.*
+_La date courante est utilisée si le paramètre time n'est pas fourni._
 
 <pre>
 {
@@ -263,7 +263,7 @@ On obtient en résultat une liste de séries identifiées par un nom et des libe
 ![Affichage Prometheus intant query](./img/instant_query_prometheus.png)
 ![Appel réseau instant query](./img/instant_query_network.png)
 
-<b>2) <ins>requête sur un intervalle de temps</ins></b>  (`range_query`)
+<b>2) <ins>requête sur un intervalle de temps</ins></b> (`range_query`)
 
 ![Range Query](./img/range_query.png)
 
@@ -311,7 +311,7 @@ On obtient en résultat une liste de séries, l'ensemble des valeurs horodatées
 
 ### Filtre et Agrégation
 
-PromQL donne la possibilité de filtrer et d'agréger les résultats.<br> 
+PromQL donne la possibilité de filtrer et d'agréger les résultats.<br>
 Les fonctions d'agrégation (`sum`, `count`, `avg`, `min`, `max` etc...) s'appliquent uniquement aux requêtes de type `instant_query`.
 
 Les exemples suivants s'appuient sur ce jeu de données :
@@ -334,7 +334,6 @@ Les filtres sont définis entre accolades, ils s'appliquent aux libellés de la 
 ![Résultat count](./img/resultat_count.png)
 
 L'utilisation d'une fonction d'agrégation retire le nom et les libellés du résultat.
-
 
 > **count by (code) (prometheus_http_requests_total)**<br>
 > ou<br>
@@ -382,7 +381,6 @@ Lorsqu'il y a une différence de libellés, on peut utiliser `on` ou `ignoring` 
 
 ![Correspondance un pour un](./img/correspondance_un_pour_un_2.png)
 
-
 Le prochain exemple évaluera la proportion de requêtes http selon leur code retour. Sur une application en bonne santé, les requêtes avec un code retour à 200 seront majoritaires.
 
 > **sum by (code, instance, job) (prometheus_http_requests_total)**<br>
@@ -409,7 +407,7 @@ Lors d'une correspondance plusieurs pour un, il est obligatoire d'utiliser le mo
 
 Une opération arithmétique peut aussi s'effectuer entre une requête et un nombre. La multiplication par 100 nous donne un poucentage.
 
-> **(sum by (code, instance, job) (prometheus_http_requests_total) / on(instance, job) group_left sum by(instance, job) (prometheus_http_requests_total)) * 100**<br>
+> **(sum by (code, instance, job) (prometheus_http_requests_total) / on(instance, job) group_left sum by(instance, job) (prometheus_http_requests_total)) \* 100**<br>
 
 ![Résultat en pourcentage](./img/proportion_resultat_final_2.png)
 
@@ -421,15 +419,15 @@ Au final, lors d'une opération arithmétique, une correspondance un pour un est
 
 Le résultat précédent semble satisfaisant, il s'avère en réalité inutile pour évaluer la santé de l'application à un instant donné :
 
-* Sur une application démarrée depuis longtemps dont la majorité des requêtes a un code retour à 200, des erreurs d'exécution sur les dernières minutes passeront inaperçues en raison nombre élevé de requêtes jouées avec succès depuis le démarrage de l'application.
+- Sur une application démarrée depuis longtemps dont la majorité des requêtes a un code retour à 200, des erreurs d'exécution sur les dernières minutes passeront inaperçues en raison nombre élevé de requêtes jouées avec succès depuis le démarrage de l'application.
 
 // TODO montrer schéma
 
-* Si l'application redémarre, les compteurs seront réinitialisés à 0. Les données avant redémarrage ne sont pas utilisées par la requête.
+- Si l'application redémarre, les compteurs seront réinitialisés à 0. Les données avant redémarrage ne sont pas utilisées par la requête.
 
 // TODO montrer schéma
 
-La fonction `rate` permet de résoudre cette problématique, ell calcule le taux d'accroissement par seconde d'un compteur sur une période donnée. 
+La fonction `rate` permet de résoudre cette problématique, ell calcule le taux d'accroissement par seconde d'un compteur sur une période donnée.
 
 // TODO montrer schéma
 
@@ -447,7 +445,7 @@ En reprenant l'exemple précédent avec l'utilisation cette fois-ci de la foncti
 
 <ins>requête finale</ins>
 
-**(sum by (code, instance, job) (rate(prometheus_http_requests_total[15m])) / on(instance, job) group_left sum by(instance, job) (rate(prometheus_http_requests_total[15m]))) * 100**
+**(sum by (code, instance, job) (rate(prometheus_http_requests_total[15m])) / on(instance, job) group_left sum by(instance, job) (rate(prometheus_http_requests_total[15m]))) \* 100**
 
 Cette requête donne un indicateur sur l'exécution des requêtes dans les 15 dernières minutes. Le résultat obtenu reste fiable même en cas de redémarrage de l'application.
 
